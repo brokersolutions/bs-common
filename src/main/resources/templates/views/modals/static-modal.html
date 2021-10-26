@@ -1,0 +1,40 @@
+<div th:fragment="static-modal" id="static-modal" class="modal modal-static" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-semibold text-main text-center" style="overflow: hidden;">
+                	<div class="col-xs-2" style="margin-top: 7px; margin-left: 15px;">
+  						<span style="font-size: 1.5em;">
+    						<!--<i class="fas fa-spinner-third fa-spin"></i>-->
+    						<i class="fas fa-circle-notch fa-spin"></i>
+    					</span>
+                	</div>
+                	<div class="col-xs-10" style="margin-left: -15px; margin-top: 9px;">
+                		<span id="static-modal-text"></span>
+                	</div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:fragment="static-modal-bs5" id="static-modal" class="modal static-modal" tabindex="-1" 
+	data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="static-modal-bs5" aria-hidden="true">
+	<div class="modal-dialog modal-sm modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="d-flex justify-content-center text-semibold text-main">
+					<div class="static-modal-spinner me-2">
+						<span>
+							<i class="fas fa-circle-notch fa-spin"></i>
+						</span>
+					</div>
+					<div class="d-flex justify-content-center">
+						<span id="static-modal-text" class="static-modal-text">
+							Cargando información...
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
