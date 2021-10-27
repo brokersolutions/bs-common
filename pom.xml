@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>brokersolutions</groupId>
+	<groupId>com.github.brokersolutions</groupId>
 	<artifactId>bs-common</artifactId>
 	<version>1.0.0</version>
 	<name>brokersolutions-common</name>
@@ -14,14 +14,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
-
-	<repositories>
-		<repository>
-			<id>project.local</id>
-			<name>project</name>
-			<url>file:${project.basedir}/softixx-common-repo</url>
-		</repository>
-	</repositories>
 
 	<dependencies>		
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
