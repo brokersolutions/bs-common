@@ -18,7 +18,7 @@ import javax.validation.Payload;
 
 import bs.common.util.ValidatorUtil;
 import bs.common.validation.ValidPattern.List;
-import bs.common.validator.constraint.PatternValidator;
+import bs.common.validation.constraint.PatternValidator;
 
 /**
  * The annotated {@code CharSequence} must match the specified regular

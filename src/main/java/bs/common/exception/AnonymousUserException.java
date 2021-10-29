@@ -1,6 +1,6 @@
 package bs.common.exception;
 
-import bs.common.wrapper.WResponse;
+import bs.common.custom.BaseResponse;
 
 public class AnonymousUserException extends BaseException {
 	private static final long serialVersionUID = -189365452227508599L;	
@@ -21,7 +21,7 @@ public class AnonymousUserException extends BaseException {
 		super(message, params, cause);
 	}
 	
-	public AnonymousUserException(WResponse response) {
+	public AnonymousUserException(BaseResponse response) {
 		super(response);
 	}
 	

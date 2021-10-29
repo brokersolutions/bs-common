@@ -1,6 +1,6 @@
 package bs.common.exception;
 
-import bs.common.wrapper.WResponse;
+import bs.common.custom.BaseResponse;
 
 public class InvalidEmailException extends BaseException {
 	private static final long serialVersionUID = -189365452227508599L;	
@@ -21,7 +21,7 @@ public class InvalidEmailException extends BaseException {
 		super(message, params, cause);
 	}
 	
-	public InvalidEmailException(WResponse response) {
+	public InvalidEmailException(BaseResponse response) {
 		super(response);
 	}
 	

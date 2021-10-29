@@ -1,8 +1,7 @@
 package bs.common.util;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,13 +21,16 @@ import org.springframework.web.util.WebUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.Data;
-import lombok.val;
-import lombok.extern.slf4j.Slf4j;
+import bs.common.custom.AdditionalResponse;
+import bs.common.custom.BaseResponse;
+import bs.common.custom.CustomError;
+import bs.common.custom.ErrorMessage;
+import bs.common.custom.ResponseJSON;
+import bs.common.custom.ResponseMessage;
+import bs.common.custom.RestResponse;
 import bs.common.enums.EApiGeneric;
 import bs.common.enums.EIziToastPosition;
 import bs.common.enums.ENotificationType;
-import bs.common.error.CustomError;
 import bs.common.exception.ResponseException;
 import bs.common.json.JGenericResponse;
 import bs.common.json.JResponse;
@@ -39,11 +41,13 @@ import bs.common.json.JResponse.JNotification.MessageType;
 import bs.common.notification.IziToast;
 import bs.common.notification.Swal;
 import bs.common.notification.Toastr;
-import bs.common.wrapper.WResponse;
-import bs.common.wrapper.WResponse.ResponseJSON;
-import bs.common.wrapper.WResponse.ResponseJSON.ResponseError;
-import bs.common.wrapper.WResponse.ResponseJSON.ResponseMessage;
+import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author Maikel Guerra Ferrer - mguerraferrer@gmail.com
+ *
+ */
 @Slf4j
 public class ResponseUtil implements Serializable {
 	private static final long serialVersionUID = 6913983201535188254L;
@@ -70,17 +74,17 @@ public class ResponseUtil implements Serializable {
 		isCustomizedHierarchy = true;
 	}
 	
-	public static WResponse response(String message) {
-		return new WResponse(message);
+	public static BaseResponse response(String message) {
+		return new BaseResponse(message);
 	}
 
-	public static WResponse response(String message, String error) {
-		return new WResponse(message, error);
+	public static BaseResponse response(String message, String error) {
+		return new BaseResponse(message, error);
 	}
 
-	public static WResponse response(BindingResult bindingResult, String error) {
+	public static BaseResponse response(BindingResult bindingResult, String error) {
 		init();
-		val errorMap = new HashMap<String, ErrorMessage>();
+		val errorMap = new LinkedHashMap<String, ErrorMessage>();
 		val bindingErrors = bindingResult.getAllErrors();
 
 		for (val obj : bindingErrors) {
@@ -109,14 +113,14 @@ public class ResponseUtil implements Serializable {
 			 	  				  		.collect(Collectors.joining(","));
 		
 		val message = "[" + result + "]";
-		return new WResponse(message, error);
+		return new BaseResponse(message, error);
 	}
 
-	public static List<ErrorMessage> response(BindingResult bindingResult) {
+	public static RestResponse restResponse(BindingResult bindingResult) {
 		init();
 		try {
 			
-			val errorMap = new HashMap<String, ErrorMessage>();
+			val errorMap = new LinkedHashMap<String, ErrorMessage>();
 			val bindingErrors = bindingResult.getAllErrors();
 
 			for (val obj : bindingErrors) {
@@ -140,18 +144,34 @@ public class ResponseUtil implements Serializable {
 			}
 
 			if(errorMap != null) {
-				return errorMap.entrySet().stream()
-									  	  .map(item -> mapped(item))
-									  	  .collect(Collectors.toList());
+				val errors = errorMap.entrySet().stream()
+									  	  		.map(item -> mapped(item))
+									  	  		.collect(Collectors.toList());
+				return RestResponse
+						.builder()
+						.errors(errors)
+						.build();
 			}
 			
 		} catch (Exception e) {
-			log.error("ResponseUtil#response error {}", e);
+			log.error("ResponseUtil#restResponse error {}", e);
 		}
-		return Collections.emptyList();
+		return null;
 	}
 	
-	public static WResponse response(final CustomError error) {
+	public static RestResponse restResponse(JResponse response) {
+		return new RestResponse(response);
+	}
+	
+	public static RestResponse restResponse(Object data) {
+		return new RestResponse(data);
+	}
+	
+	public static RestResponse restResponse(List<ErrorMessage> errors) {
+		return new RestResponse(errors);
+	}
+	
+	public static BaseResponse response(final CustomError error) {
 		val field = error.getField();
 		val errorMessage = ValidatorUtil.isNotEmpty(error.getMessage()) ? MessageUtil.getMessage(error.getMessage()) : null;
 		val errorCode = ValidatorUtil.isNotEmpty(error.getCode()) ? error.getCode() : null;
@@ -175,10 +195,10 @@ public class ResponseUtil implements Serializable {
 		val responseJSON = new ResponseJSON();
 		responseJSON.setMessage(message);
 		
-		return new WResponse(responseJSON);
+		return new BaseResponse(responseJSON);
 	}
 	
-	public static WResponse response(final String errorCode, final String field, final String cause) {
+	public static BaseResponse response(final String errorCode, final String field, final String cause) {
 		val errorMessage = MessageUtil.getMessage(errorCode);
 		val message = ResponseMessage
 						.builder()
@@ -190,10 +210,10 @@ public class ResponseUtil implements Serializable {
 		val responseJSON = new ResponseJSON();
 		responseJSON.setMessage(message);
 		
-		return new WResponse(responseJSON);
+		return new BaseResponse(responseJSON);
 	}
 
-	public static WResponse response(final String errorCode, final Object[] params, final String cause) {
+	public static BaseResponse response(final String errorCode, final Object[] params, final String cause) {
 		val errorMessage = MessageUtil.getMessage(errorCode, params);
 		val message = ResponseMessage
 						.builder()
@@ -204,10 +224,10 @@ public class ResponseUtil implements Serializable {
 		val responseJSON = new ResponseJSON();
 		responseJSON.setMessage(message);
 		
-		return new WResponse(responseJSON);
+		return new BaseResponse(responseJSON);
 	}
 	
-	public static WResponse response(final String errorCode, final Object[] params, final String field, final String cause) {
+	public static BaseResponse response(final String errorCode, final Object[] params, final String field, final String cause) {
 		val errorMessage = MessageUtil.getMessage(errorCode, params);
 		val message = ResponseMessage
 						.builder()
@@ -219,20 +239,20 @@ public class ResponseUtil implements Serializable {
 		val responseJSON = new ResponseJSON();
 		responseJSON.setMessage(message);
 		
-		return new WResponse(responseJSON);
+		return new BaseResponse(responseJSON);
 	}
 
-	public static WResponse response(final String errorCode, final ResponseError responseError, final EApiGeneric cause) {
+	public static BaseResponse response(final String errorCode, final AdditionalResponse addResponse, final EApiGeneric cause) {
 		val errorMessage = MessageUtil.getMessage(errorCode);
 		
 		String description = null;
 		String action = null;
 		String url = null;
 		
-		if(responseError != null) {
-			description = responseError.getDescription();
-			action = responseError.getAction();
-			url = responseError.getUrl();
+		if(addResponse != null) {
+			description = addResponse.getDescription();
+			action = addResponse.getAction();
+			url = addResponse.getUrl();
 		}
 		
 		val message = ResponseMessage
@@ -247,20 +267,20 @@ public class ResponseUtil implements Serializable {
 		val responseJSON = new ResponseJSON();
 		responseJSON.setMessage(message);
 		
-		return new WResponse(responseJSON);
+		return new BaseResponse(responseJSON);
 	}
 
-	public static WResponse response(final String errorCode, final ResponseError responseError, final Object[] params, final String cause) {
+	public static BaseResponse response(final String errorCode, final AdditionalResponse addResponse, final Object[] params, final String cause) {
 		val errorMessage = MessageUtil.getMessage(errorCode, params);
 		
 		String description = null;
 		String action = null;
 		String url = null;
 		
-		if(responseError != null) {
-			description = responseError.getDescription();
-			action = responseError.getAction();
-			url = responseError.getUrl();
+		if(addResponse != null) {
+			description = addResponse.getDescription();
+			action = addResponse.getAction();
+			url = addResponse.getUrl();
 		}
 		
 		val message = ResponseMessage
@@ -275,10 +295,10 @@ public class ResponseUtil implements Serializable {
 		val responseJSON = new ResponseJSON();
 		responseJSON.setMessage(message);
 		
-		return new WResponse(responseJSON);
+		return new BaseResponse(responseJSON);
 	}
 	
-	public static ResponseEntity<WResponse> handleBindException(final BindingResult bindingResult, final WebRequest request, @Nullable final String error) {
+	public static ResponseEntity<BaseResponse> handleBindException(final BindingResult bindingResult, final WebRequest request, @Nullable final String error) {
 		val bindingErrors = bindingResult.getAllErrors();
 		val errors = bindingErrors.stream()
 							 	  .filter(FieldError.class::isInstance)
@@ -286,7 +306,7 @@ public class ResponseUtil implements Serializable {
 							 	  .map(item -> "{\"field\":\"" + item.getField() + "\",\"defaultMessage\":\"" + item.getDefaultMessage() + "\"}")
 							 	  .collect(Collectors.joining(","));
 		val resultJSON = "[" + errors + "]";
-		val response = new WResponse(resultJSON, error);
+		val response = new BaseResponse(resultJSON, error);
 		
 		request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, new Exception(), RequestAttributes.SCOPE_REQUEST);
 		return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.BAD_REQUEST);
@@ -313,7 +333,7 @@ public class ResponseUtil implements Serializable {
 									.build();
 				
 				val mapper = new ObjectMapper();
-				return mapper.writeValueAsString(new WResponse(responseJson));
+				return mapper.writeValueAsString(new BaseResponse(responseJson));
 			}
 			
 		} catch (Exception e) {
@@ -368,7 +388,7 @@ public class ResponseUtil implements Serializable {
 		).collect(Collectors.toList());
 		
 		//##### Defining the error hierarchy
-    	errorHierarchy = new HashMap<>();
+    	errorHierarchy = new LinkedHashMap<>();
     	errorHierarchy.put(userNoAuthenticatedActionMessage, 1);
     	errorHierarchy.put(requiredMessage, 1);
     	errorHierarchy.put(notEmptyMessage, 1);
@@ -528,8 +548,12 @@ public class ResponseUtil implements Serializable {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(genericResponse);
 	}
 	
-	public static ResponseEntity<WResponse> internalServerError(WResponse wr) {
+	public static ResponseEntity<BaseResponse> internalServerError(BaseResponse wr) {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(wr);
+	}
+	
+	public static ResponseEntity<RestResponse> internalServerError(RestResponse rs) {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(rs);
 	}
 	
 	public static String responseStr(Object object) throws ResponseException {
@@ -704,26 +728,19 @@ public class ResponseUtil implements Serializable {
 		return response;
 	}
 	
-	@Data
-    public static class ErrorMessage {
-    	private String field;
-    	private String error;
-    	private String alternativeError;
-    }
-    
     private static ErrorMessage mapped(final Entry<String, ErrorMessage> entry) {
     	val field = entry.getKey();
-		
 		var error = entry.getValue().getError();
+		
 		if(entry.getValue().getAlternativeError() != null) {
 			error = entry.getValue().getAlternativeError();
 		}
 		
-		val errorMessage = new ErrorMessage();
-		errorMessage.setField(field);
-		errorMessage.setError(error);
-		
-		return errorMessage;
+		return ErrorMessage
+				.builder()
+				.field(field)
+				.error(error)
+				.build();
     }
     
     private static String i18nMessage(String key) {

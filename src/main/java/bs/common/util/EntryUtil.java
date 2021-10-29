@@ -8,12 +8,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.stereotype.Service;
-
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
-@Service
 @Slf4j
 public class EntryUtil implements Serializable {
 	private static final long serialVersionUID = 4697743635389319682L;

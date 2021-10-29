@@ -285,7 +285,7 @@ public class ValidatorUtil implements Serializable {
 	 * <b>messages_en_US.properties:</b> An unexpected error occurred while
 	 * processing the request
 	 */
-	public static final String UNEXPECTED_ERROR = "general.error.001";
+	public static final String UNEXPECTED_ERROR = "validation.unexpected.error";
 
 	// ##### ===== THROWABLE ERRORS =====
 	/**
@@ -353,6 +353,14 @@ public class ValidatorUtil implements Serializable {
 	public static final int MIN_DECIMALS = 2;
 	public static final int MAX_DECIMALS = 6;
 
+	public static boolean nonNull(List<Object> args) {
+		return args.stream().filter(ObjectUtils::isEmpty).count() == 0;
+	}
+	
+	public static boolean nonNull(Object value) {
+		return Objects.nonNull(value);
+	}
+	
 	public static boolean isEmpty(Object value) {
 		return ObjectUtils.isEmpty(value);
 	}
@@ -361,14 +369,6 @@ public class ValidatorUtil implements Serializable {
 		return !isEmpty(value);
 	}
 
-	public static boolean isEmpty(final String value) {
-		return !StringUtils.hasLength(value);
-	}
-
-	public static boolean isNotEmpty(final String value) {
-		return StringUtils.hasLength(value);
-	}
-	
 	public static boolean hasErrors(Boolean error, Map<String, String> errorMap) {
 		return Boolean.TRUE.equals(error) || ValidatorUtil.isNotEmpty(errorMap);
 	}

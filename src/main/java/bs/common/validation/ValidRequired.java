@@ -18,7 +18,7 @@ import javax.validation.Payload;
 
 import bs.common.util.ValidatorUtil;
 import bs.common.validation.ValidRequired.List;
-import bs.common.validator.constraint.RequiredValidator;
+import bs.common.validation.constraint.RequiredValidator;
 
 /**
  * The annotated element must not be {@code null} nor empty. Supported types

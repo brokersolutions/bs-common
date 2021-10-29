@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,19 +19,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Singular;
 import lombok.val;
+import bs.common.custom.BaseResponse;
+import bs.common.custom.ResponseMessage;
 import bs.common.notification.IziToast;
 import bs.common.notification.Swal;
 import bs.common.notification.Toastr;
 import bs.common.notification.W2Tag;
 import bs.common.util.MessageUtil;
 import bs.common.util.ValidatorUtil;
-import bs.common.wrapper.WResponse;
-import bs.common.wrapper.WResponse.ResponseJSON.ResponseMessage;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(Include.NON_NULL)
 public class JResponse {
 	@Default
 	private boolean success = false;
@@ -115,6 +119,7 @@ public class JResponse {
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
+	@JsonInclude(Include.NON_NULL)
 	public static class JNotification {
 		@Default
 		private boolean pageMessage = Boolean.FALSE;
@@ -216,7 +221,7 @@ public class JResponse {
 			return new JNotification(error);
 		}
 		
-		public static JNotification pageMessageError(final WResponse response) {
+		public static JNotification pageMessageError(final BaseResponse response) {
 			val error = response.getResponseJSON().getMessage();
 			return new JNotification(error);
 		}
@@ -299,6 +304,7 @@ public class JResponse {
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
+	@JsonInclude(Include.NON_NULL)
 	public static class JError {
 		private String field;
 		private String defaultMessage;

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-import jakarta.xml.bind.DatatypeConverter;
+//import jakarta.xml.bind.DatatypeConverter;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
@@ -94,11 +94,12 @@ public class Base64Util implements Serializable {
 		return ValueUtil.EMPTY;
 	}
 
-	public static byte[] byteFromBase64(String token) {
+	public static byte[] stringToByte(String token) {
 		try {
 
-			if (token != null) {
-				return DatatypeConverter.parseBase64Binary(token);
+			if (token != null && !token.isEmpty()) {
+				//return DatatypeConverter.parseBase64Binary(token);
+				return token.getBytes(StandardCharsets.UTF_8);
 			}
 
 		} catch (Exception e) {

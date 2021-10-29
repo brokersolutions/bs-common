@@ -1,6 +1,6 @@
 package bs.common.exception;
 
-import bs.common.wrapper.WResponse;
+import bs.common.custom.BaseResponse;
 
 public class SolveMessageException extends BaseException {
 	private static final long serialVersionUID = -189365452227508599L;	
@@ -21,7 +21,7 @@ public class SolveMessageException extends BaseException {
 		super(message, params, cause);
 	}
 	
-	public SolveMessageException(WResponse response) {
+	public SolveMessageException(BaseResponse response) {
 		super(response);
 	}
 	

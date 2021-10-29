@@ -1,6 +1,7 @@
 package bs.common.validation;
 
-import bs.common.validator.constraint.FieldsValueMatchValidator;
+import bs.common.util.ValidatorUtil;
+import bs.common.validation.constraint.FieldsValueMatchValidator;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.TYPE;
@@ -21,7 +22,7 @@ import javax.validation.Payload;
 @Documented
 public @interface ValidFieldsValueMatch {
 
-	String message() default "Fields values don't match!";
+	String message() default ValidatorUtil.INVALID_PASSWORD_MATCHING;
 	
 	Class<?>[] groups() default {};
 

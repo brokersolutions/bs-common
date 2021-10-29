@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Utility class for timing using {@link StopWatch} API
  * 
- * @author maikel.guerra
+ * @author Maikel Guerra Ferrer - mguerraferrer@gmail.com
  *
  */
 @Slf4j

@@ -1,7 +1,7 @@
 package bs.common.exception;
 
-import bs.common.wrapper.WResponse;
-import bs.common.wrapper.WThrowable;
+import bs.common.custom.BaseResponse;
+import bs.common.custom.CustomRedAttr;
 
 public class ThrowableException extends BaseException {
 	private static final long serialVersionUID = -189365452227508599L;	
@@ -22,11 +22,11 @@ public class ThrowableException extends BaseException {
 		super(message, params, cause);
 	}
 	
-	public ThrowableException(WResponse response) {
+	public ThrowableException(BaseResponse response) {
 		super(response);
 	}
 	
-	public ThrowableException(WThrowable throwable) {
+	public ThrowableException(CustomRedAttr throwable) {
 		super(throwable);
 	}
 	

@@ -15,12 +15,26 @@ import lombok.val;
 
 public class RandomUtil implements Serializable {
 	private static final long serialVersionUID = 7326494501133697791L;
+	
+	private static final String CANDIDATE_CHARS = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890_!@#$%&*";
 
 	private RandomUtil() {
 		throw new IllegalStateException("Utility class");
 	}
 	
 	private static Random rand = new Random();
+	
+	public static String randomChars(int length) {
+		return randomChars(CANDIDATE_CHARS, length);
+	}
+	
+	public static String randomChars(String candidateChars, int length) {
+	    val sb = new StringBuilder();
+	    for (int i = 0; i < length; i++) {
+	        sb.append(candidateChars.charAt(rand.nextInt(candidateChars.length())));
+	    }
+	    return sb.toString();
+	}
 	
     public static Integer randomInteger(final int min, final int max) {
         val splittableRandom = new SplittableRandom();

@@ -1,13 +1,13 @@
 package bs.common.json;
 
+import bs.common.custom.BaseAddress;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import bs.common.wrapper.WAddress;
 
 @Data
 @NoArgsConstructor
 public class JAddress {
-	private WAddress address;
+	private BaseAddress address;
 	private JResponse response;
 	
 	@Data
